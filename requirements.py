@@ -1,0 +1,5 @@
+requests
+python-whois
+dnspython
+cryptography
+Jinja2

@@ -1,0 +1,1303 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recon Intelligence Report - vardhaman.org</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f0f4f8;
+            color: #1a202c;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            overflow: hidden;
+            position: relative;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 50px;
+            position: relative;
+        }
+        .header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .header .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .header .badge-top {
+            position: absolute;
+            right: 40px;
+            top: 40px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        /* PDF Download Button - SINGLE BUTTON */
+        .download-bar {
+            background: #f7fafc;
+            padding: 12px 50px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .download-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        .download-info {
+            font-size: 13px;
+            color: #718096;
+        }
+        
+        .risk-section {
+            padding: 30px 50px;
+            background: #f7fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .risk-grid {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 30px;
+            align-items: center;
+        }
+        .risk-score {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 150px;
+        }
+        .risk-score .score {
+            font-size: 42px;
+            font-weight: 700;
+        }
+        .risk-score .label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .risk-status .badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .badge-critical { background: #fed7d7; color: #9b2c2c; }
+        .badge-high { background: #feb2b2; color: #9b2c2c; }
+        .badge-medium { background: #fefcbf; color: #975a16; }
+        .badge-low { background: #fefcbf; color: #975a16; }
+        .badge-secure { background: #c6f6d5; color: #276749; }
+        .content { padding: 30px 50px; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        .card-header {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-header .icon { font-size: 28px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+        .table-wrap { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th {
+            background: #f7fafc;
+            color: #4a5568;
+            font-weight: 600;
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        tr:hover td { background: #f7fafc; }
+        .value-missing { color: #e53e3e; font-weight: 500; }
+        .value-present { color: #38a169; font-weight: 500; }
+        .tech-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #bee3f8;
+            color: #2b6cb0;
+            margin: 3px 4px 3px 0;
+        }
+        .tech-tag.cdn { background: #fbd38d; color: #975a16; }
+        .tech-tag.server { background: #feb2b2; color: #9b2c2c; }
+        .tech-tag.framework { background: #c6f6d5; color: #276749; }
+        .finding-critical { border-left: 4px solid #e53e3e; padding-left: 12px; margin: 6px 0; }
+        .finding-high { border-left: 4px solid #ed8936; padding-left: 12px; margin: 6px 0; }
+        .finding-medium { border-left: 4px solid #ecc94b; padding-left: 12px; margin: 6px 0; }
+        .finding-low { border-left: 4px solid #48bb78; padding-left: 12px; margin: 6px 0; }
+        .stat-box {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-box .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+        .stat-box .label {
+            font-size: 12px;
+            color: #718096;
+        }
+        .footer {
+            background: #f7fafc;
+            padding: 20px 40px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 14px;
+            text-align: center;
+        }
+        details { margin-top: 10px; }
+        summary {
+            cursor: pointer;
+            font-weight: 500;
+            color: #667eea;
+            padding: 8px;
+            background: #f7fafc;
+            border-radius: 6px;
+        }
+        summary:hover { background: #edf2f7; }
+        
+        /* Print styles for PDF - HIDE download bar */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; }
+            .download-bar { display: none !important; }
+            .card:hover { box-shadow: none; border-color: #e2e8f0; }
+            .card { break-inside: avoid; page-break-inside: avoid; }
+            .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .risk-score { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            /* Hide file path that might appear */
+            .file-path { display: none !important; }
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .risk-grid { grid-template-columns: 1fr; text-align: center; }
+            .header { padding: 30px 20px; }
+            .content { padding: 20px; }
+            .header .badge-top { position: static; margin-top: 10px; display: inline-block; }
+            .download-bar { padding: 12px 20px; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header - Clean, no file path -->
+    <div class="header">
+        <h1>🔍 Recon Intelligence Report</h1>
+        <div class="subtitle">vardhaman.org · 2026-07-27T11:26:06.789759</div>
+        <div class="badge-top">Web Recon Automation Framework</div>
+    </div>
+    
+    <!-- Download Bar - SINGLE BUTTON ONLY -->
+    <div class="download-bar">
+        <span class="download-info">📄 Download PDF Report</span>
+        <button class="download-btn" onclick="downloadPDF()">
+            <svg viewBox="0 0 24 24"><path d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM12,18,8,14h2.5V10h3v4H16ZM13,9V3.5L18.5,9Z"/></svg>
+            Download PDF
+        </button>
+    </div>
+    
+    <!-- Risk Section -->
+    <div class="risk-section">
+        <div class="risk-grid">
+            <div class="risk-score">
+                <div class="score">15</div>
+                <div class="label">Risk Score / 100</div>
+            </div>
+            <div class="risk-status">
+                <span class="badge badge-high risk">High Risk</span>
+                <div style="margin-top: 8px; font-size: 14px; color: #718096;">
+                    7 findings detected
+                </div>
+            </div>
+            <div style="font-size: 14px; color: #718096;">
+                <div>🔴 Critical: 0</div>
+                <div>🟠 High: 1</div>
+                <div>🟡 Medium: 2</div>
+                <div>🟢 Low: 4</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="content">
+        <!-- Quick Stats -->
+        <div class="grid-4" style="margin-bottom: 24px;">
+            <div class="stat-box">
+                <div class="number">200</div>
+                <div class="label">HTTP Status</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">2</div>
+                <div class="label">A Records</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">39</div>
+                <div class="label">SSL Days Left</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">6</div>
+                <div class="label">Technologies</div>
+            </div>
+        </div>
+        
+        <!-- Target Intelligence -->
+        <div class="card">
+            <div class="card-header"><span class="icon">🎯</span> Target Intelligence</div>
+            <div class="grid-2">
+                <div>
+                    <table>
+                        <tr><td><strong>Domain</strong></td><td>vardhaman.org</td></tr>
+                        <tr><td><strong>Registered Domain</strong></td><td>vardhaman.org</td></tr>
+                        <tr><td><strong>Hostname</strong></td><td>vardhaman.org</td></tr>
+                        <tr><td><strong>FQDN</strong></td><td>vardhaman.org</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr><td><strong>Registrar</strong></td><td>PDR Ltd. d/b/a PublicDomainRegistry.com</td></tr>
+                        <tr><td><strong>DNSSEC</strong></td><td>unsigned</td></tr>
+                        <tr><td><strong>Registrant</strong></td><td>N/A</td></tr>
+                        <tr><td><strong>Reverse DNS</strong></td><td>172.67.157.215</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div style="margin-top: 12px;">
+                <strong>IP Addresses:</strong>
+                
+                <div>IPv4: 172.67.157.215, 104.21.8.203</div>
+                
+                
+                <div>IPv6: 2606:4700:3035::ac43:9dd7, 2606:4700:3037::6815:8cb</div>
+                
+            </div>
+        </div>
+        
+        <!-- DNS Records -->
+        <div class="card">
+            <div class="card-header"><span class="icon">🌐</span> DNS Records</div>
+            <div class="grid-3">
+                <div>
+                    <table>
+                        <tr><td><strong>DNSSEC</strong></td><td>❌ No</td></tr>
+                        <tr><td><strong>Wildcard DNS</strong></td><td>✅ Yes</td></tr>
+                        <tr><td><strong>DNS Leaks</strong></td><td>No DNS leaks detected</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr><td><strong>SPF</strong></td><td>✅ Found</td></tr>
+                        <tr><td><strong>DMARC</strong></td><td>❌ Not Found</td></tr>
+                        <tr><td><strong>DKIM</strong></td><td>✅ Found</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr><td><strong>MX Records</strong></td><td>1</td></tr>
+                        <tr><td><strong>NS Records</strong></td><td>2</td></tr>
+                        <tr><td><strong>A Records</strong></td><td>2</td></tr>
+                    </table>
+                </div>
+            </div>
+            <details>
+                <summary>📋 View All DNS Records</summary>
+                <div style="margin-top: 10px;">
+                    <div><strong>A:</strong> 172.67.157.215, 104.21.8.203</div>
+                    <div><strong>AAAA:</strong> 2606:4700:3037::6815:8cb, 2606:4700:3035::ac43:9dd7</div>
+                    <div><strong>MX:</strong> 0 vardhaman-org.mail.protection.outlook.com.</div>
+                    <div><strong>NS:</strong> owen.ns.cloudflare.com., riya.ns.cloudflare.com.</div>
+                    <div><strong>TXT:</strong> "MS=ms48985209", "google-site-verification=hqzFQ-GiBu2nmTwwRJW30j-izlvcK4c2QAcIQ_oom9o", "v=spf1 include:spf.protection.outlook.com -all", "v=verifydomain MS=msED7C47"</div>
+                    <div><strong>SOA:</strong> owen.ns.cloudflare.com. dns.cloudflare.com. 2407609059 10000 2400 604800 1800</div>
+                </div>
+            </details>
+        </div>
+        
+        <!-- Infrastructure & Geolocation -->
+        <div class="card">
+            <div class="card-header"><span class="icon">🏗️</span> Infrastructure & Geolocation</div>
+            <div class="grid-2">
+                <div>
+                    <table>
+                        <tr><td><strong>IP Address</strong></td><td>172.67.157.215</td></tr>
+                        <tr><td><strong>ASN</strong></td><td>13335</td></tr>
+                        <tr><td><strong>ASN Name</strong></td><td>CLOUDFLARENET - Cloudflare, Inc., US</td></tr>
+                        <tr><td><strong>ISP</strong></td><td>Cloudflare, Inc.</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr><td><strong>Country</strong></td><td>Canada</td></tr>
+                        <tr><td><strong>Region</strong></td><td>Ontario</td></tr>
+                        <tr><td><strong>City</strong></td><td>Toronto</td></tr>
+                        <tr><td><strong>Cloud Provider</strong></td><td>Cloudflare</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- HTTP Headers -->
+        <div class="card">
+            <div class="card-header"><span class="icon">📡</span> HTTP Headers</div>
+            <div class="table-wrap">
+                <table>
+                    <tr><th>Header</th><th>Value</th></tr>
+                    
+                    
+                    <tr><td>Date</td><td>Mon, 27 Jul 2026 05:55:30 GMT</td></tr>
+                    
+                    <tr><td>Content-Type</td><td>text/html; charset=UTF-8</td></tr>
+                    
+                    <tr><td>Transfer-Encoding</td><td>chunked</td></tr>
+                    
+                    <tr><td>Connection</td><td>keep-alive</td></tr>
+                    
+                    <tr><td>x-powered-by</td><td>PHP/8.3.31</td></tr>
+                    
+                    <tr><td>x-dns-prefetch-control</td><td>on</td></tr>
+                    
+                    <tr><td>link</td><td><https://vardhaman.org/wp-json/>; rel="https://api.w.org/", <https://vardhaman.org/wp-json/wp/v2/pages/20>; rel="alternate"; title="JSON"; type="application/json", <https://vardhaman.org/>; rel=shortlink</td></tr>
+                    
+                    <tr><td>vary</td><td>Accept-Encoding</td></tr>
+                    
+                    <tr><td>Nel</td><td>{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}</td></tr>
+                    
+                    <tr><td>x-litespeed-cache</td><td>hit</td></tr>
+                    
+                    <tr><td>Report-To</td><td>{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=ZTqE5Cv9p0UZPGPr%2Bs1jlDyh69XGeYCEgLbt8oe3akotM%2FUFBOprN4F%2FozlJkgpL80Mbo1CdW6gn3fOPWkpWtvrbGhHCMIUZCauCW7W3MwlSRDsFOxgRAaosLXLUAgIJ"}]}</td></tr>
+                    
+                    <tr><td>Server</td><td>cloudflare</td></tr>
+                    
+                    <tr><td>platform</td><td>hostinger</td></tr>
+                    
+                    <tr><td>panel</td><td>hpanel</td></tr>
+                    
+                    <tr><td>content-security-policy</td><td>upgrade-insecure-requests</td></tr>
+                    
+                    <tr><td>x-turbo-charged-by</td><td>LiteSpeed</td></tr>
+                    
+                    <tr><td>cf-cache-status</td><td>DYNAMIC</td></tr>
+                    
+                    <tr><td>Content-Encoding</td><td>zstd</td></tr>
+                    
+                    <tr><td>CF-RAY</td><td>a2196540ccca557b-HYD</td></tr>
+                    
+                    <tr><td>alt-svc</td><td>h3=":443"; ma=86400</td></tr>
+                    
+                    
+                </table>
+            </div>
+        </div>
+        
+        <!-- SSL Certificate -->
+        <div class="card">
+            <div class="card-header"><span class="icon">🔐</span> SSL/TLS Certificate</div>
+            <div class="grid-2">
+                <div>
+                    <table>
+                        <tr><td><strong>Issuer</strong></td><td>CN=YE2,O=Let's Encrypt,C=US</td></tr>
+                        <tr><td><strong>Subject</strong></td><td>CN=vardhaman.org</td></tr>
+                        <tr><td><strong>Common Name</strong></td><td>vardhaman.org</td></tr>
+                        <tr><td><strong>Organization</strong></td><td>Vardhaman</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr><td><strong>Valid From</strong></td><td>2026-06-06 16:16:09</td></tr>
+                        <tr><td><strong>Valid To</strong></td><td>2026-09-04 16:16:08</td></tr>
+                        <tr><td><strong>Days Remaining</strong></td><td>39 days</td></tr>
+                        <tr><td><strong>Wildcard</strong></td><td>✅ Yes</td></tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div style="margin-top: 10px;"><strong>Subject Alternative Names:</strong> *.vardhaman.org, vardhaman.org</div>
+            
+        </div>
+        
+        <!-- robots.txt -->
+        <div class="card">
+            <div class="card-header"><span class="icon">🤖</span> robots.txt</div>
+            
+            <p><strong>Status:</strong> 200</p>
+            <p><strong>Last Modified:</strong> Wed, 04 Feb 2026 12:04:29 GMT</p>
+            <details>
+                <summary>📄 View Content</summary>
+                <pre style="background: #f7fafc; padding: 15px; border-radius: 6px; overflow-x: auto; margin-top: 10px; font-size: 13px;">User-agent: *
+Allow: /
+
+Sitemap: https://vardhaman.edu.in/sitemap.xml
+</pre>
+            </details>
+            
+        </div>
+        
+        <!-- sitemap.xml -->
+        <div class="card">
+            <div class="card-header"><span class="icon">🗺️</span> sitemap.xml</div>
+            
+            <p><strong>URL Count:</strong> 2</p>
+            <p><strong>First URLs:</strong></p>
+            <ul>
+                
+                <li>https://vardhaman.org/wp-sitemap-posts-page-1.xml</li>
+                
+                <li>https://vardhaman.org/wp-sitemap-posts-announcement-1.xml</li>
+                
+            </ul>
+            
+        </div>
+        
+        <!-- Technologies -->
+        <div class="card">
+            <div class="card-header"><span class="icon">⚙️</span> Technologies Detected</div>
+            <div>
+                
+                <div><strong>Server:</strong> <span class="tech-tag server">cloudflare</span></div>
+                
+                
+                <div><strong>Technologies:</strong> 
+                    <span class="tech-tag">Cloudflare</span><span class="tech-tag">jQuery</span><span class="tech-tag">WordPress</span><span class="tech-tag">Node.js</span><span class="tech-tag">PHP</span><span class="tech-tag">ASP.NET</span>
+                </div>
+                
+                
+                <div><strong>CDN:</strong> 
+                    <span class="tech-tag cdn">Cloudflare</span>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- Security Findings -->
+        <div class="card" style="border-color: #fc8181;">
+            <div class="card-header"><span class="icon">🛡️</span> Security Findings</div>
+            
+            
+            <div><strong style="color: #ed8936;">🟠 High:</strong></div>
+            
+            <div class="finding-high">Missing Strict-Transport-Security (HSTS) - No HTTPS enforcement</div>
+            
+            
+            
+            <div><strong style="color: #ecc94b;">🟡 Medium:</strong></div>
+            
+            <div class="finding-medium">Missing X-Frame-Options - Clickjacking vulnerability</div>
+            
+            <div class="finding-medium">Missing X-Content-Type-Options - MIME sniffing vulnerability</div>
+            
+            
+            
+            <div><strong style="color: #48bb78;">🟢 Low:</strong></div>
+            
+            <div class="finding-low">Missing Referrer-Policy - Information leakage possible</div>
+            
+            <div class="finding-low">Missing Permissions-Policy - Browser feature misuse possible</div>
+            
+            <div class="finding-low">Server header exposed: cloudflare</div>
+            
+            <div class="finding-low">X-Powered-By header exposed: PHP/8.3.31</div>
+            
+            
+            
+        </div>
+        
+        <!-- Page Statistics -->
+        <div class="card">
+            <div class="card-header"><span class="icon">📊</span> Page Statistics</div>
+            <div class="grid-3">
+                <div>
+                    <table>
+                        <tr><td><strong>Status</strong></td><td>200</td></tr>
+                        <tr><td><strong>Redirects</strong></td><td>0</td></tr>
+                        <tr><td><strong>Transfer Size</strong></td><td>186486 bytes</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr><td><strong>JS Files</strong></td><td>1</td></tr>
+                        <tr><td><strong>CSS Files</strong></td><td>1</td></tr>
+                        <tr><td><strong>Images</strong></td><td>41</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr><td><strong>HTTPS %</strong></td><td>50%</td></tr>
+                        <tr><td><strong>HTTP %</strong></td><td>50%</td></tr>
+                        <tr><td><strong>Domains</strong></td><td>29</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Directories Found -->
+        
+        <div class="card">
+            <div class="card-header"><span class="icon">📁</span> Directories Found</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                
+                <span class="tech-tag">https://vardhaman.org/admin</span>
+                
+                <span class="tech-tag">https://vardhaman.org/test</span>
+                
+                <span class="tech-tag">https://vardhaman.org/login</span>
+                
+                <span class="tech-tag">https://vardhaman.org/dashboard</span>
+                
+                <span class="tech-tag">https://vardhaman.org/wp-admin</span>
+                
+                <span class="tech-tag">https://vardhaman.org/wp-content</span>
+                
+                <span class="tech-tag">https://vardhaman.org/media</span>
+                
+                <span class="tech-tag">https://vardhaman.org/lib</span>
+                
+            </div>
+        </div>
+        
+        
+        <!-- Crawl Data -->
+        
+        <div class="card">
+            <div class="card-header"><span class="icon">🔗</span> Crawl Data</div>
+            <div class="grid-2">
+                <div>
+                    <strong>Internal Links:</strong> 
+                    
+                        132
+                    
+                    <details>
+                        <summary style="cursor: pointer; color: #667eea;">Show</summary>
+                        <div style="max-height: 200px; overflow-y: auto; font-size: 13px;">
+                            
+                                
+                                    
+                                    <div>https://studentscorner.vardhaman.org/</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/wp-content/uploads/2026/06/JksveVf3I3Q-HQ-1.jpg</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/chairmans-desk/</div>
+                                    
+                                
+                                    
+                                    <div>https://mechanical.vardhaman.org/</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/about-us/</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/community-engagement/</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/wp-content/uploads/2026/05/Sports-Achievements.docx</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/wp-content/uploads/2026/06/OxC_gZ5qQ-A-HQ.jpg</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/wp-content/uploads/2026/05/JXUIxiKxTKg-HQ.jpg</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/entrepreneurship-innovation/</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/announcement/academic-administrative-audit-ay-2025-26-20-21-july-2026/</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/wp-content/uploads/2024/03/MNGT-2024-NIRF.pdf</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/wp-content/uploads/2026/05/Sustainable-Institutions.pdf</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/wp-content/uploads/2024/03/ENGG-2024-Nirf.pdf</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/anti-ragging-committee/</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/wp-content/uploads/2026/05/oD0yGuHX_zQ-HQ.jpg</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/cafeteria-food-courts/</div>
+                                    
+                                
+                                    
+                                    <div>https://iqac.vardhaman.org/</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.org/announcement/orientation-programme-for-lateral-entry-le-students-23-july-2026-welcome-to-the-vardhaman-family/</div>
+                                    
+                                
+                                    
+                                    <div>https://iqac.vardhaman.org/calendars/</div>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                        </div>
+                    </details>
+                </div>
+                <div>
+                    <strong>External Links:</strong>
+                    
+                        91
+                    
+                    <details>
+                        <summary style="cursor: pointer; color: #667eea;">Show</summary>
+                        <div style="max-height: 200px; overflow-y: auto; font-size: 13px;">
+                            
+                                
+                                    
+                                    <div>https://www.khanacademy.org/science/electrical-engineering</div>
+                                    
+                                
+                                    
+                                    <div>https://asmedigitalcollection.asme.org</div>
+                                    
+                                
+                                    
+                                    <div>https://app.fleetx.io/live/share/v2/eJwzNDMzMqgztTROTrUwMdG1MEs11TWxTDPXTUw0MwESRsZpJsaGlgamRgDiCwpu</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.irins.org/profile/240456</div>
+                                    
+                                
+                                    
+                                    <div>https://app.fleetx.io/live/share/v2/eJwzNDMzMqhLTDNPMjUxMNI1NjQ01TVJSkvVtTA3ttQFClkYpKQYmKdYWAAA4FwKZA%3D%3D</div>
+                                    
+                                
+                                    
+                                    <div>https://easypay.axis.bank.in/easyPay/makePayment?mid=NDY2Mjg%3D</div>
+                                    
+                                
+                                    
+                                    <div>https://app.fleetx.io/live/share/v2/eJwFwYENACAIA7CLSJAJ4jsTPMPbbUeE6VMsb64U37NkIltolwJuFlE38nzlZgth</div>
+                                    
+                                
+                                    
+                                    <div>https://vardhaman.irins.org/profile/370465</div>
+                                    
+                                
+                                    
+                                    <div>https://shodhganga.inflibnet.ac.in</div>
+                                    
+                                
+                                    
+                                    <div>https://www.instagram.com/vmeg.vardhaman/profilecard</div>
+                                    
+                                
+                                    
+                                    <div>https://app.fleetx.io/live/share/v2/eJwFwYkNADAEAMCJJIh3HEXH6Oy9IzPG1zZTWAektEH2OkSsgg9mMoo31Qf5%24wtT</div>
+                                    
+                                
+                                    
+                                    <div>https://app.fleetx.io/live/share/v2/eJwFwYENACAIA7CLliAoxHPQwRnebjvcVd7uEiEXRh3DDBKZUfCwDsrNVv%242lwuy</div>
+                                    
+                                
+                                    
+                                    <div>https://app.fleetx.io/live/share/v2/eJwFwYkNACAIBLCJSHjOM4wjBMdwdlsjXZ%24FKQ5d1JiC6CvJgXgsbM8uQD%24dEQox</div>
+                                    
+                                
+                                    
+                                    <div>https://app.fleetx.io/live/share/v2/eJwFwYkNACAIBLCJLhFOiYzDo2M4u62Y6XjH2J6SWLoD09XgUoJTeZsMlvYH6hwLTA%3D%3D</div>
+                                    
+                                
+                                    
+                                    <div>https://www.e-yantra.org/</div>
+                                    
+                                
+                                    
+                                    <div>https://app.fleetx.io/live/share/v2/eJwFwYENACAIA7CLSAB18M7AcIa32xrg%2BqZBWoaYTsp2v1JUSODWLOD08APs3gtO</div>
+                                    
+                                
+                                    
+                                    <div>https://ekumbh.aicte-india.org</div>
+                                    
+                                
+                                    
+                                    <div>https://www.linkedin.com/school/vardhaman/</div>
+                                    
+                                
+                                    
+                                    <div>https://database.worldlibrary.org/</div>
+                                    
+                                
+                                    
+                                    <div>https://ieeexplore.ieee.org/Xplore/home.jsp</div>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- Security Headers Analysis -->
+        <div class="card">
+            <div class="card-header"><span class="icon">🔒</span> Security Headers Analysis</div>
+            <div class="table-wrap">
+                <table>
+                    <tr><th>Header</th><th>Status</th></tr>
+                    
+                    
+                    <tr>
+                        <td>Content-Security-Policy</td>
+                        <td class="value-present">
+                            ✅ Present
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Strict-Transport-Security</td>
+                        <td class="value-missing">
+                            ❌ Missing
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>X-Frame-Options</td>
+                        <td class="value-missing">
+                            ❌ Missing
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>X-Content-Type-Options</td>
+                        <td class="value-missing">
+                            ❌ Missing
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Referrer-Policy</td>
+                        <td class="value-missing">
+                            ❌ Missing
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Permissions-Policy</td>
+                        <td class="value-missing">
+                            ❌ Missing
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Cross-Origin-Opener-Policy</td>
+                        <td class="value-missing">
+                            ❌ Missing
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Cross-Origin-Embedder-Policy</td>
+                        <td class="value-missing">
+                            ❌ Missing
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Cross-Origin-Resource-Policy</td>
+                        <td class="value-missing">
+                            ❌ Missing
+                        </td>
+                    </tr>
+                    
+                    
+                </table>
+            </div>
+        </div>
+        
+        <!-- Executive Summary -->
+        <div class="card" style="background: #ebf8ff; border-color: #bee3f8;">
+            <div class="card-header"><span class="icon">📋</span> Executive Summary</div>
+            <div style="font-size: 15px; line-height: 1.8;">
+                <p><strong>Target:</strong> vardhaman.org</p>
+                <p><strong>Risk Score:</strong> 15/100 - <span class="badge badge-high risk">High Risk</span></p>
+                <p><strong>Findings:</strong> 7 total</p>
+                <p><strong>SSL Status:</strong> Valid for 39 days</p>
+                <p><strong>Security Headers:</strong> 1/9 present</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Generated by Web Recon Automation Framework &bull; 2026-07-27T11:26:06.789759
+    </div>
+</div>
+
+<!-- JavaScript for PDF Download - SINGLE FUNCTION -->
+<script>
+function downloadPDF() {
+    // Trigger browser print dialog with PDF option
+    window.print();
+}
+
+// Keyboard shortcut: Ctrl+P
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        // Let browser handle print
+        return true;
+    }
+});
+</script>
+
+</body>
+</html>
+    

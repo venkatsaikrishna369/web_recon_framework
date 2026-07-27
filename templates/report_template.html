@@ -1,0 +1,279 @@
+<!-- templates/report_template.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recon Intelligence Report - {{ domain }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f0f4f8;
+            color: #1a202c;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 50px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header-sub {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        /* Risk Score Card */
+        .risk-score {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        .risk-score .score {
+            font-size: 48px;
+            font-weight: 700;
+        }
+        .risk-score .label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-left: 10px;
+        }
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 24px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        .card-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-header .icon {
+            font-size: 24px;
+        }
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th {
+            background: #f7fafc;
+            color: #4a5568;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        tr:hover {
+            background: #f7fafc;
+        }
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-critical { background: #fed7d7; color: #9b2c2c; }
+        .badge-high { background: #feb2b2; color: #9b2c2c; }
+        .badge-medium { background: #fefcbf; color: #975a16; }
+        .badge-low { background: #c6f6d5; color: #276749; }
+        .badge-info { background: #bee3f8; color: #2b6cb0; }
+        /* Footer */
+        .footer {
+            background: #f7fafc;
+            padding: 24px 40px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 14px;
+            text-align: center;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .header { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>🔍 Recon Intelligence Report</h1>
+        <div class="header-sub">{{ domain }} · {{ timestamp }}</div>
+    </div>
+    
+    <!-- Summary -->
+    <div style="padding: 30px 40px;">
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+            <div class="risk-score">
+                <span class="score">{{ risk_score }}</span>
+                <span class="label">/ 100 Risk Score</span>
+            </div>
+            <div>
+                <div style="margin: 10px 0;">
+                    <span class="badge badge-{{ overall_status|lower }}">{{ overall_status }}</span>
+                </div>
+                <div style="font-size: 14px; color: #718096;">
+                    {{ recommendations|length }} recommendations available
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dashboard Grid -->
+    <div style="padding: 0 40px 40px 40px;">
+        <div class="grid-3">
+            <!-- Target Intelligence -->
+            <div class="card">
+                <div class="card-header"><span class="icon">🎯</span> Target Intelligence</div>
+                <div class="table-container">
+                    <table>
+                        <tr><td><strong>Domain</strong></td><td>{{ target.domain }}</td></tr>
+                        <tr><td><strong>IP</strong></td><td>{{ target.ipv4|join(', ') }}</td></tr>
+                        <tr><td><strong>ASN</strong></td><td>{{ target.asn }}</td></tr>
+                        <tr><td><strong>Cloud Provider</strong></td><td>{{ target.cloud_provider }}</td></tr>
+                    </table>
+                </div>
+            </div>
+            <!-- DNS Intelligence -->
+            <div class="card">
+                <div class="card-header"><span class="icon">🌐</span> DNS Intelligence</div>
+                <div class="table-container">
+                    <table>
+                        <tr><td><strong>DNSSEC</strong></td><td>{{ dns.dnssec|yesno:"Yes,No" }}</td></tr>
+                        <tr><td><strong>Wildcard DNS</strong></td><td>{{ dns.wildcard_dns|yesno:"Yes,No" }}</td></tr>
+                        <tr><td><strong>SPF</strong></td><td>{{ dns.spf|yesno:"Found,Not Found" }}</td></tr>
+                        <tr><td><strong>DMARC</strong></td><td>{{ dns.dmarc|yesno:"Found,Not Found" }}</td></tr>
+                    </table>
+                </div>
+            </div>
+            <!-- Security Headers -->
+            <div class="card">
+                <div class="card-header"><span class="icon">🛡️</span> Security Headers</div>
+                <div class="table-container">
+                    <table>
+                        <tr><td><strong>CSP</strong></td><td>{{ http.security_headers.Content-Security-Policy|yesno:"✅ Present,❌ Missing" }}</td></tr>
+                        <tr><td><strong>HSTS</strong></td><td>{{ http.security_headers.Strict-Transport-Security|yesno:"✅ Present,❌ Missing" }}</td></tr>
+                        <tr><td><strong>XFO</strong></td><td>{{ http.security_headers.X-Frame-Options|yesno:"✅ Present,❌ Missing" }}</td></tr>
+                        <tr><td><strong>XCTO</strong></td><td>{{ http.security_headers.X-Content-Type-Options|yesno:"✅ Present,❌ Missing" }}</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technologies -->
+        <div class="card" style="margin-top: 24px;">
+            <div class="card-header"><span class="icon">⚙️</span> Technologies Detected</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                {% for tech in tech.technologies %}
+                <span class="badge badge-info">{{ tech }}</span>
+                {% endfor %}
+                {% if not tech.technologies %}
+                <span style="color: #718096;">No technologies detected</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Security Observations -->
+        <div class="card" style="margin-top: 24px;">
+            <div class="card-header"><span class="icon">⚠️</span> Security Observations</div>
+            <div>
+                {% if sec_obs.critical %}
+                <h4 style="color: #9b2c2c; margin: 10px 0;">Critical</h4>
+                <ul>
+                    {% for obs in sec_obs.critical %}
+                    <li style="color: #9b2c2c;">🔴 {{ obs }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if sec_obs.high %}
+                <h4 style="color: #c53030; margin: 10px 0;">High</h4>
+                <ul>
+                    {% for obs in sec_obs.high %}
+                    <li style="color: #c53030;">🟠 {{ obs }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if sec_obs.medium %}
+                <h4 style="color: #975a16; margin: 10px 0;">Medium</h4>
+                <ul>
+                    {% for obs in sec_obs.medium %}
+                    <li style="color: #975a16;">🟡 {{ obs }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Recommendations -->
+        <div class="card" style="margin-top: 24px; background: #ebf8ff; border-color: #bee3f8;">
+            <div class="card-header"><span class="icon">💡</span> Recommendations</div>
+            <ul style="list-style: none; padding: 0;">
+                {% for rec in recommendations %}
+                <li style="padding: 8px 0; border-bottom: 1px solid #bee3f8;">
+                    <span class="badge badge-{{ rec.priority }}">{{ rec.priority|upper }}</span>
+                    <strong>{{ rec.finding }}</strong>
+                    <div style="color: #4a5568; font-size: 14px; margin-top: 4px;">→ {{ rec.suggestion }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Generated by Recon Intelligence Platform &bull; {{ timestamp }}
+    </div>
+</div>
+</body>
+</html>
