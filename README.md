@@ -86,8 +86,6 @@ web_recon_framework/
 │   └── helpers.py          # Common helper functions
 │
 └── output/                 # Generated Reports
-
-
     ├── report.html
     ├── report.md
     └── report.json
