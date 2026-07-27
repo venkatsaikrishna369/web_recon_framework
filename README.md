@@ -34,6 +34,7 @@ This framework is designed for penetration testers, red teamers, security engine
 ## 🏗️ Architecture
 
 The framework follows a **modular architecture** where each module is independent and responsible for a single task.
+
 web_recon_framework/
 ├── main.py # Orchestrator - runs all modules
 ├── config.py # Configuration settings
@@ -96,3 +97,36 @@ venv\Scripts\activate
 
 # Linux/Mac
 source venv/bin/activate
+
+Step 3: Install Dependencies
+pip install -r requirements.txt
+
+Package	Version	Purpose
+requests	2.31.0+	HTTP requests
+python-whois	0.8.0+	WHOIS lookup
+dnspython	2.4.0+	DNS resolution
+cryptography	41.0.0+	SSL certificate parsing
+Jinja2	3.1.0+	HTML templating
+beautifulsoup4	4.12.0+	HTML parsing
+lxml	4.9.0+	XML parsing
+tldextract	3.5.0+	Domain parsing
+ipwhois	1.3.0+	IP/ASN intelligence
+pillow	10.0.0+	Image processing
+
+💻 Usage
+Basic Usage
+python main.py example.com
+
+Advanced Usage
+
+# Specify output directory
+python main.py google.com --output my_reports
+
+# Skip certain report formats
+python main.py github.com --no-html --no-md
+
+# Set custom timeout
+python main.py hackthebox.com --timeout 30
+
+# Interactive mode (just run without arguments)
+python main.py
